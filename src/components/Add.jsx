@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 function Add() {
     const [domain, setDomain] = useState('');
     const [ip, setIp] = useState('');
+    const [location, setLocation] = useState('');
+    const [owner, setOwner] = useState('');
+    const [duration, setDuration] = useState('');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
@@ -24,12 +27,22 @@ function Add() {
             setMessage('Error : Invalid IP address. Please enter a valid IP address.');
             return;
         }
+        
+        // IP duration validation
+        const durationPattern = /^[0-9]+$/;
+        if (!durationPattern.test(duration)) {
+            setMessage('Error : Invalid Duration. Please enter a valid Number.');
+            return;
+        }
 
         try {
-            const response = await axios.post('http://localhost:3002/api/domains/add', { domain, ip });
+            const response = await axios.post('http://localhost:3002/api/domains/add', { domain, ip ,location,owner,duration});
             setMessage(response.data.message);
             setDomain('');
             setIp('');
+            setLocation('');
+            setOwner('');
+            setDuration('');
         } catch (error) {
             setMessage("Error : " + error.response.data.message);
             console.error('Error adding domain and IP:', error);
@@ -48,6 +61,18 @@ function Add() {
                 <div className="mb-3">
                     <label htmlFor="ip" className="form-label">IP:</label>
                     <input type="text" className="form-control" id="ip" value={ip} onChange={(e) => setIp(e.target.value)} />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="ip" className="form-label">Location:</label>
+                    <input type="text" className="form-control" id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="ip" className="form-label">Owner:</label>
+                    <input type="text" className="form-control" id="owner" value={owner} onChange={(e) => setOwner(e.target.value)} />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="ip" className="form-label">Validity duration (based on days):</label>
+                    <input type="text" className="form-control" id="duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
                 <button type="button" className="btn btn-secondary m-3" onClick={() => navigate('/watch-all')}>Back to Watch All</button>

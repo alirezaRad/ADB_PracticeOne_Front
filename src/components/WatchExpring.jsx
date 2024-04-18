@@ -1,14 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import WatchRecent from "./WatchRecent";
-import WatchExpring from "./WatchExpring";
-import DomainPerLocation from "./DomainPerLocation";
-import DomainPerOwner from "./DomainPerOwner";
-import DomainPerLocationAvrage from "./DomainPerLocationAvrage";
-import DomainPerOwnerAvrage from "./DomainPerOwnerAvrage";
-import DomainPerMasterIpsAvrage from "./DomainPerMasterIpsAvrage";
-import DomainPerMasterIpsCount from "./DomainPerMasterIpsCount";
 
 function WatchAll() {
     const [domains, setDomains] = useState([]);
@@ -16,7 +8,7 @@ function WatchAll() {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
     const fetchData = () => {
-        axios.get('http://localhost:3002/api/domains')
+        axios.get('http://localhost:3002/api/expiring-domains')
             .then(response => {
                 setDomains(response.data);
             })
@@ -62,20 +54,9 @@ function WatchAll() {
 
     return (
         <div>
-            <WatchRecent></WatchRecent>
-            <WatchExpring></WatchExpring>
-            <div className="container mt-5 mb-5 row mx-5">
-                <h1 className="mt-5 mb-5">Some Reports</h1>
-                <DomainPerLocation></DomainPerLocation>
-                <DomainPerOwner></DomainPerOwner>
-                <DomainPerLocationAvrage></DomainPerLocationAvrage>
-                <DomainPerOwnerAvrage></DomainPerOwnerAvrage>
-                <DomainPerMasterIpsAvrage></DomainPerMasterIpsAvrage>
-                <DomainPerMasterIpsCount></DomainPerMasterIpsCount>
-            </div>
             <div className="container mt-5 mx-5 mb-5">
+                <h2>Expiring Domains</h2>
                 {message && <div className={`alert ${message.startsWith('Error') ? 'alert-danger' : 'alert-success'}`} role="alert">{message}</div>}
-                <h2>All Domains</h2>
                 <h4>Search</h4>
                 <input
                     type="text"
@@ -88,7 +69,7 @@ function WatchAll() {
                     {filteredDomains.map(domain => (
                         <li key={domain._id} className="list-group-item d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>{domain.domain}</strong> - {domain.ip}  - {domain.location} - {domain.owner} - {domain.duration}
+                                <strong>{domain.domain}</strong> - {domain.ip} - {domain.duration}
                             </div>
                             <div>
                                 <button className="btn btn-primary btn-sm m-1" onClick={() => handleEdit(domain._id)}>Edit</button>

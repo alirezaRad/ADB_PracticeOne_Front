@@ -7,15 +7,21 @@ function Edit() {
     const navigate = useNavigate();
     const [domain, setDomain] = useState('');
     const [ip, setIp] = useState('');
+    const [location, setLocation] = useState('');
+    const [owner, setOwner] = useState('');
+    const [duration, setDuration] = useState('');
     const [message, setMessage] = useState('');
 
     useEffect(() => {
         const fetchDomain = async () => {
             try {
                 const response = await axios.get(`http://localhost:3002/api/domains/${id}`);
-                const { domain, ip } = response.data;
+                const { domain, ip ,location,owner,duration} = response.data;
                 setDomain(domain);
                 setIp(ip);
+                setLocation(location);
+                setOwner(owner);
+                setDuration(duration);
             } catch (error) {
                 console.error('Error fetching domain:', error);
             }
@@ -42,7 +48,7 @@ function Edit() {
         }
 
         try {
-            const response = await axios.put(`http://localhost:3002/api/domains/update/${id}`, { domain, ip });
+            const response = await axios.put(`http://localhost:3002/api/domains/update/${id}`, { domain, ip ,location,owner,duration});
             setMessage(response.data.message);
         } catch (error) {
             setMessage("Error : " + error.response.data.message);
@@ -62,6 +68,18 @@ function Edit() {
                 <div className="mb-3">
                     <label htmlFor="ip" className="form-label">IP:</label>
                     <input type="text" className="form-control" id="ip" value={ip} onChange={(e) => setIp(e.target.value)} />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="ip" className="form-label">Location:</label>
+                    <input type="text" className="form-control" id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="ip" className="form-label">Owner:</label>
+                    <input type="text" className="form-control" id="owner" value={owner} onChange={(e) => setOwner(e.target.value)} />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="ip" className="form-label">Validity duration (based on days):</label>
+                    <input type="text" className="form-control" id="duration" value={duration} onChange={(e) => setDuration(e.target.value)} />
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
                 <button type="button" className="btn btn-secondary m-3" onClick={() => navigate('/watch-all')}>Back to Watch All</button>
